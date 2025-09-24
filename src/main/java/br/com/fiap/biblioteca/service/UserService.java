@@ -40,30 +40,14 @@ public class UserService extends DefaultOAuth2UserService {
         logger.info("UserService inicializado com repository: " + userRepository);
     }
 
-    /**
-     * Busca um usuário pelo ID
-     * @param id O ID do usuário a ser encontrado
-     * @return Optional contendo o usuário, se encontrado
-     */
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
 
-    /**
-     * Busca um usuário pelo email
-     * @param email O email do usuário a ser encontrado
-     * @return Optional contendo o usuário, se encontrado
-     */
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    /**
-     * Método público para registrar ou atualizar um usuário OAuth2
-     * Este método é chamado pelo LoginListener quando um usuário faz login via Google
-     * @param oauth2User O usuário OAuth2 do Google
-     * @return O usuário registrado ou atualizado
-     */
     @Transactional
     public User register(OAuth2User oauth2User) {
         if (oauth2User == null) {
@@ -89,9 +73,6 @@ public class UserService extends DefaultOAuth2UserService {
         }
     }
 
-    /**
-     * Registra ou atualiza um usuário do Google OAuth2
-     */
     @Transactional
     private User processGoogleUser(OAuth2User oauthUser) {
         String email = oauthUser.getAttribute("email");
