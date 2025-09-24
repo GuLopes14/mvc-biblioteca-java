@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Livros Disponíveis')}"></head>
+<body>
+    <header th:replace="~{layout :: header}"></header>
+
+    <main class="container my-5">
+        <h2 class="mb-4">Livros Disponíveis</h2>
+
+        <!-- Mensagens de feedback -->
+        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <!-- Barra de pesquisa -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <form action="/view-available-books" method="get" class="d-flex">
+                    <input type="text" name="search" class="form-control me-2" placeholder="Pesquisar por título ou autor..." th:value="${searchTerm}">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Mensagem quando não há livros disponíveis -->
+        <div class="alert alert-info" th:if="${#lists.isEmpty(books)}">
+            Não há livros disponíveis no momento.
+        </div>
+
+        <!-- Grade de livros -->
+        <div class="row row-cols-1 row-cols-md-3 g-4" th:if="${not #lists.isEmpty(books)}">
+            <div class="col" th:each="book : ${books}">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${book.title}">Título do Livro</h5>
+                        <h6 class="card-subtitle mb-2 text-muted" th:text="${book.author}">Autor</h6>
+                        <p class="card-text">
+                            <strong>Editora:</strong> <span th:text="${book.publisher ?: 'Não informado'}">Editora</span><br>
+                            <strong>Ano:</strong> <span th:text="${book.year ?: 'Não informado'}">Ano</span><br>
+                            <strong>ISBN:</strong> <span th:text="${book.isbn ?: 'Não informado'}">ISBN</span><br>
+                            <strong>Cópias disponíveis:</strong> <span th:text="${book.availableCopies}">0</span>/<span th:text="${book.copies}">0</span>
+                        </p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0 d-flex gap-2">
+                        <!-- Emprestar -->
+                        <form th:action="@{/loans/create}" method="post" class="d-inline">
+                            <input type="hidden" name="bookId" th:value="${book.id}" />
+                            <button type="submit" class="btn btn-primary" th:disabled="${book.availableCopies == 0}">Emprestar</button>
+                        </form>
+
+                        <!-- Controles de admin -->
+                        <div th:if="${isAdmin}">
+                            <a class="btn btn-outline-secondary" th:href="@{'/books/edit/' + ${book.id}}">Editar</a>
+                            <form th:action="@{'/books/delete/' + ${book.id}}" method="post" class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir este livro?');">
+                                <button type="submit" class="btn btn-outline-danger">Excluir</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{layout :: footer}"></footer>
+
+</body>
+</html>

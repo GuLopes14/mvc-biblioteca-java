@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Dashboard')}"></head>
+<body>
+    <header th:replace="~{layout :: header}"></header>
+
+    <main class="container my-5">
+        <div class="row">
+            <!-- User Profile Section -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Perfil do Usuário</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center"
+                                 style="width: 100px; height: 100px;">
+                                <span class="display-4" th:text="${#strings.substring(name,0,1)}">U</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <h5 class="mb-0" th:text="${name}">Nome do Usuário</h5>
+                            <p class="text-muted" th:text="${email}">usuario@email.com</p>
+                            <p>Login via: <span class="badge bg-info" th:text="${provider}">Local</span></p>
+                        </div>
+                        <div class="d-grid">
+                            <a href="/logout" class="btn btn-outline-danger">Sair</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Meus Empréstimos</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- If no loans -->
+                        <div class="text-center py-4" th:if="${!hasLoans}">
+                            <p class="mb-3">Você não tem empréstimos ativos.</p>
+                            <a href="/view-available-books" class="btn btn-primary">Explorar Livros</a>
+                        </div>
+
+                        <!-- If has loans -->
+                        <div th:if="${hasLoans}">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Livro</th>
+                                            <th>Data de Empréstimo</th>
+                                            <th>Devolução Prevista</th>
+                                            <th>Status</th>
+                                            <th style="width:1%">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="loan : ${loans}">
+                                            <td>
+                                                <div class="fw-semibold" th:text="${loan.book.title}">Título do Livro</div>
+                                                <div class="text-muted small" th:text="${loan.book.author}">Autor</div>
+                                            </td>
+                                            <td th:text="${#temporals.format(loan.loanDate, 'dd/MM/yyyy')}">01/01/2025</td>
+                                            <td>
+                                                <span th:text="${#temporals.format(loan.dueDate, 'dd/MM/yyyy')}">15/01/2025</span>
+                                                <span th:if="${loan.overdue}" class="badge bg-danger ms-2">Atrasado</span>
+                                            </td>
+                                            <td>
+                                                <span th:switch="${loan.status}">
+                                                    <span th:case="'ACTIVE'" class="badge bg-primary">Ativo</span>
+                                                    <span th:case="'RETURNED'" class="badge bg-success">Devolvido</span>
+                                                    <span th:case="'LATE'" class="badge bg-danger">Atrasado</span>
+                                                    <span th:case="*" class="badge bg-secondary" th:text="${loan.status}">Status</span>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <form th:if="${loan.status.name() == 'ACTIVE'}" th:action="@{'/loans/' + ${loan.id} + '/return'}" method="post" class="d-inline" onsubmit="return confirm('Confirmar devolução deste livro?');">
+                                                    <button type="submit" class="btn btn-sm btn-outline-success">Devolver</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-end">
+                                <a href="/my-loans" class="btn btn-outline-secondary btn-sm">Ver todos</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Ações Rápidas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="d-grid">
+                                    <a href="/view-available-books" class="btn btn-outline-primary">Ver Catálogo</a>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-grid">
+                                    <a href="/my-loans" class="btn btn-outline-secondary">Histórico</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{layout :: footer}"></footer>
+</body>
+</html>

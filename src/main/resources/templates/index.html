@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Início')}"></head>
+<body>
+    <header th:replace="~{layout :: header}"></header>
+
+    <main class="container my-5">
+        <section class="hero-section text-center">
+            <div class="container">
+                <h1 class="display-4">Bem-vindo à Biblioteca FIAP</h1>
+                <p class="lead">Sua plataforma digital para gerenciamento de livros e empréstimos.</p>
+                <div th:if="${authenticated}">
+                    <p>Olá, <span th:text="${name}">Usuário</span>!</p>
+                    <a href="/dashboard" class="btn btn-primary">Ir para o Dashboard</a>
+                </div>
+                <div th:unless="${authenticated}">
+                    <a href="/login" class="btn btn-primary">Entrar</a>
+                    <a href="/register" class="btn btn-outline-secondary ms-2">Registrar</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="container my-5">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Catálogo Digital</h5>
+                            <p class="card-text">Acesse nossa coleção completa de livros e encontre facilmente o que procura.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Empréstimos Online</h5>
+                            <p class="card-text">Solicite empréstimos de livros e acompanhe prazos de devolução de forma simples.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Acesso Seguro</h5>
+                            <p class="card-text">Faça login com Google.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{layout :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Login')}"></head>
+<body>
+    <header th:replace="~{layout :: header}"></header>
+
+    <main class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-white text-center py-3">
+                        <h3>Login</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Alert for logout messages -->
+                        <div th:if="${param.logout}" class="alert alert-success" role="alert">
+                            Você saiu do sistema com sucesso.
+                        </div>
+
+                        <!-- Google Login -->
+                        <div class="text-center my-4">
+                            <p class="mb-4">Faça login com sua conta Google:</p>
+                            <a href="/oauth2/authorization/google" class="btn btn-lg btn-google btn-block" style="background-color: #4285F4; color: white; padding: 10px 16px; border-radius: 4px; text-decoration: none; display: inline-block;">
+                                <i class="bi bi-google me-2"></i>Login com Google
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{layout :: footer}"></footer>
+</body>
+</html>
