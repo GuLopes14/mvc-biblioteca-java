@@ -146,6 +146,39 @@ public class WebController {
         return "redirect:/view-available-books";
     }
 
+    // Admin: Adicionar livro (formulário)
+    @GetMapping("/books/add")
+    public String addBookForm(Model model) {
+        model.addAttribute("book", new Book());
+        return "book-add";
+    }
+
+    // Admin: Salvar novo livro
+    @PostMapping("/books/add")
+    public String addBookSubmit(@RequestParam String title,
+                                @RequestParam String author,
+                                @RequestParam(required = false) String publisher,
+                                @RequestParam(required = false) Integer year,
+                                @RequestParam(required = false) String isbn,
+                                @RequestParam Integer copies,
+                                RedirectAttributes redirectAttributes) {
+        try {
+            Book newBook = new Book();
+            newBook.setTitle(title);
+            newBook.setAuthor(author);
+            newBook.setPublisher(publisher);
+            newBook.setYear(year);
+            newBook.setIsbn(isbn);
+            newBook.setCopies(copies);
+
+            bookService.createBook(newBook);
+            redirectAttributes.addFlashAttribute("message", "Livro adicionado com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage() != null ? e.getMessage() : "Erro ao adicionar livro");
+        }
+        return "redirect:/view-available-books";
+    }
+
     // Admin: Editar livro (formulário)
     @GetMapping("/books/edit/{id}")
     public String editBookForm(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {

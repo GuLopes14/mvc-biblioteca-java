@@ -17,6 +17,7 @@ import java.util.List;
 public class AdminSecurityFilter extends OncePerRequestFilter {
     // Lista de rotas que exigem permissão de administrador
     private static final List<String> ADMIN_ROUTES = Arrays.asList(
+            "/books/add",
             "/books/create",
             "/books/edit",
             "/books/delete",
