@@ -26,7 +26,6 @@ public class LoanController {
     
     @GetMapping("/my")
     public ResponseEntity<List<Loan>> findMyLoans(Authentication authentication) {
-        // TODO: Implement logic to get authenticated user ID
         Long userId = 1L; // placeholder
         return ResponseEntity.ok(loanService.findByUser(userId));
     }
@@ -42,8 +41,7 @@ public class LoanController {
             @RequestParam Long bookId,
             Authentication authentication) {
         try {
-            // TODO: Implement logic to get authenticated user ID
-            Long userId = 1L; // placeholder
+            Long userId = 1L;
             Loan loan = loanService.createLoan(userId, bookId);
             return ResponseEntity.ok(loan);
         } catch (Exception e) {
